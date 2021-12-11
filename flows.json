@@ -1,0 +1,363 @@
+[
+    {
+        "id": "d5ad4a13d76a81e7",
+        "type": "tab",
+        "label": "Flow 5 (Working flow)",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0e416e308c89b723",
+        "type": "inject",
+        "z": "d5ad4a13d76a81e7",
+        "name": "test_config.json",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payloadType": "str",
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "6be458d89b9f91da"
+            ]
+        ]
+    },
+    {
+        "id": "6be458d89b9f91da",
+        "type": "file in",
+        "z": "d5ad4a13d76a81e7",
+        "name": "Read test_config.json ",
+        "filename": "C:\\Users\\maith\\Downloads\\test_config.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "da3cc08f487e3482"
+            ]
+        ]
+    },
+    {
+        "id": "da3cc08f487e3482",
+        "type": "json",
+        "z": "d5ad4a13d76a81e7",
+        "name": "JSON Parser",
+        "property": "payload",
+        "action": "str",
+        "pretty": true,
+        "x": 210,
+        "y": 220,
+        "wires": [
+            [
+                "9e92a0683df07afe"
+            ]
+        ]
+    },
+    {
+        "id": "b012d35b8b12049d",
+        "type": "OpcUa-Client",
+        "z": "d5ad4a13d76a81e7",
+        "endpoint": "1ddf442d0ae791fb",
+        "action": "read",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": "1",
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "name": "",
+        "x": 640,
+        "y": 220,
+        "wires": [
+            [
+                "24de879d93bceaf4"
+            ]
+        ]
+    },
+    {
+        "id": "8efa85754069b5ed",
+        "type": "mqtt in",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "topic": "test",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "de02600ad54a9c99",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 600,
+        "y": 420,
+        "wires": [
+            [
+                "346b9d0785e7370c"
+            ]
+        ]
+    },
+    {
+        "id": "346b9d0785e7370c",
+        "type": "debug",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "24de879d93bceaf4",
+        "type": "mqtt out",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "topic": "test",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de02600ad54a9c99",
+        "x": 870,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "01c060119e5f9035",
+        "type": "inject",
+        "z": "d5ad4a13d76a81e7",
+        "name": "Disconnect",
+        "props": [
+            {
+                "p": "action",
+                "v": "disconnect",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 660,
+        "y": 300,
+        "wires": [
+            [
+                "24de879d93bceaf4"
+            ]
+        ]
+    },
+    {
+        "id": "9e92a0683df07afe",
+        "type": "function",
+        "z": "d5ad4a13d76a81e7",
+        "name": "Configuration",
+        "func": "msg1={};\nmsg2={};\n\n/*msg.OpcUaEndpoint = {\n    credentials: {},\n    endpoint: 'opc.tcp://0.0.0.0:00000',\n    securityPolicy: 'None',\n    securityMode: 'None',\n    login: false,\n    user: undefined,\n    password: undefined\n}\n\nmsg.mqttbroker = {\n    broker: 'localhost',\n    port: 1883\n}*/\n\nmsg1.topic=\"Reconnect\";\nmsg1.action=\"reconnect\";\nconsole.log(msg.payload);\nmsg1.OpcUaEndpoint = JSON.parse(msg.payload);\n\nmsg2.action=\"connect\";\nmsg2.mqttbroker = JSON.parse(msg.payload);\n\nreturn [msg1,msg2];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 180,
+        "wires": [
+            [
+                "b012d35b8b12049d"
+            ],
+            [
+                "24de879d93bceaf4"
+            ]
+        ]
+    },
+    {
+        "id": "7e52902745723d63",
+        "type": "function",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "func": "var newarray=[JSON.parse(msg.payload).topics];\nconsole.log(newarray);\nreturn newarray;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 260,
+        "wires": [
+            [
+                "b012d35b8b12049d"
+            ]
+        ]
+    },
+    {
+        "id": "2ba7065b2348d8b0",
+        "type": "aedes broker",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": null,
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 160,
+        "y": 520,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e7437e5340d8cf06",
+        "type": "inject",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "ns=3;i=1001",
+        "payloadType": "date",
+        "x": 520,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fb781ae9160d38c6",
+        "type": "json",
+        "z": "d5ad4a13d76a81e7",
+        "name": "JSON Parser",
+        "property": "payload",
+        "action": "str",
+        "pretty": true,
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "7e52902745723d63"
+            ]
+        ]
+    },
+    {
+        "id": "01b1970dce81070a",
+        "type": "file in",
+        "z": "d5ad4a13d76a81e7",
+        "name": "Read test_config.json ",
+        "filename": "C:\\Users\\maith\\Downloads\\test_config.json",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 180,
+        "y": 340,
+        "wires": [
+            [
+                "fb781ae9160d38c6"
+            ]
+        ]
+    },
+    {
+        "id": "71316aeedd807a7b",
+        "type": "inject",
+        "z": "d5ad4a13d76a81e7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "01b1970dce81070a"
+            ]
+        ]
+    },
+    {
+        "id": "1ddf442d0ae791fb",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "0.0.0.0:0000",
+        "secpol": "None",
+        "secmode": "None",
+        "login": false
+    },
+    {
+        "id": "de02600ad54a9c99",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "0.0.0.0",
+        "port": "0000",
+        "clientid": "",
+        "autoConnect": false,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
