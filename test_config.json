@@ -1,0 +1,22 @@
+{
+    "credentials": {},
+    "endpoint": "opc.tcp://Maithili.mshome.net:53530/OPCUA/SimulationServer",
+    "securityPolicy": "Basic256Sha256",
+    "securityMode": "SignAndEncrypt",
+    "login": true,
+    "user": "OpcUaClient",
+    "password": "OpcUaClient",
+    "broker": "localhost",
+    "port": "1883",
+    "topics": [
+        {
+            "topic": "ns=3;i=1001;datatype=Int32"
+        },
+        {
+            "topic": "ns=3;i=1003;datatype=Double"
+        },
+        {
+            "topic": "ns=3;i=1006 ;datatype=Double"
+        }
+    ]
+}
